@@ -19,6 +19,5 @@ RUN go get github.com/go-delve/delve/cmd/dlv
 ADD . .
 
 RUN dibs -generateSources
-# Tests are disabled because there currently are none.
 # To reduce build time, automatic sources generation has also been disabled. To generate sources manually, please re-deploy manually.
-CMD dibs -dev -skipGenerateSources -skipTests
+CMD dibs -dev -skipGenerateSources
