@@ -1,0 +1,175 @@
+targets:
+  - name: tftpdd-linux
+    helm:
+      src: charts/tftpdd
+      dist: .bin/chart/tftpdd
+    dockerManifest: pojntfx/tftpdd:latest
+    platforms:
+      - identifier: linux/amd64
+        paths:
+          watch: .
+          include: (.*)\.go
+          assetInImage: /usr/local/bin/tftpdd
+          assetOut: .bin/binaries/tftpdd/tftpdd-linux-amd64
+          gitRepoRoot: .
+        commands:
+          generateSources: go generate ./...
+          build: GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -tags netgo -ldflags '-extldflags "-static"' -o .bin/binaries/tftpdd/tftpdd-linux-amd64 cmd/tftpdd/main.go
+          unitTests: go test -v ./...
+          integrationTests: .bin/binaries/tftpdd/tftpdd-linux-amd64 --help
+          imageTests: docker run --platform linux/amd64 -e DIBS_TARGET=tftpdd-linux -e TARGETPLATFORM=linux/amd64 pojntfx/tftpdd:linux-amd64 /usr/local/bin/tftpdd --help
+          chartTests: helm install tftpdd .bin/chart/tftpdd/tftpdd-*.tgz && helm delete tftpdd
+          start: |
+            if [ "$DIBS_DEBUG" = "true" ]; then
+              pkill -9 dlv || true
+              pkill -9 tftpdd || true
+              .bin/binaries/tftpdd/tftpdd-linux-amd64 &
+              dlv attach $! --headless --listen=localhost:31441 --api-version=2 --accept-multiclient || true
+            else
+              .bin/binaries/tftpdd/tftpdd-linux-amd64
+            fi
+        docker:
+          build:
+            file: Dockerfile.tftpdd
+            context: .
+            tag: pojntfx/tftpdd:linux-amd64
+          unitTests:
+            file: Dockerfile.unitTests
+            context: .
+            tag: pojntfx/tftpdd-unit-tests:linux-amd64
+          integrationTests:
+            file: Dockerfile.integrationTests
+            context: .
+            tag: pojntfx/tftpdd-integration-tests:linux-amd64
+          chartTests:
+            file: Dockerfile.chartTests
+            context: .
+            tag: pojntfx/tftpdd-chart-tests:linux-amd64
+      - identifier: linux/arm64
+        paths:
+          watch: .
+          include: (.*)\.go
+          assetInImage: /usr/local/bin/tftpdd
+          assetOut: .bin/binaries/tftpdd/tftpdd-linux-arm64
+          gitRepoRoot: .
+        commands:
+          generateSources: go generate ./...
+          build: GOOS=linux GOARCH=arm64 CGO_ENABLED=0 go build -tags netgo -ldflags '-extldflags "-static"' -o .bin/binaries/tftpdd/tftpdd-linux-arm64 cmd/tftpdd/main.go
+          unitTests: go test -v ./...
+          integrationTests: .bin/binaries/tftpdd/tftpdd-linux-arm64 --help
+          imageTests: docker run --platform linux/arm64 -e DIBS_TARGET=tftpdd-linux -e TARGETPLATFORM=linux/arm64 pojntfx/tftpdd:linux-arm64 /usr/local/bin/tftpdd --help
+          chartTests: helm install tftpdd .bin/chart/tftpdd/tftpdd-*.tgz && helm delete tftpdd
+          start: |
+            if [ "$DIBS_DEBUG" = "true" ]; then
+              pkill -9 dlv || true
+              pkill -9 tftpdd || true
+              .bin/binaries/tftpdd/tftpdd-linux-arm64 &
+              dlv attach $! --headless --listen=:31441 --api-version=2 --accept-multiclient || true
+            else
+              .bin/binaries/tftpdd/tftpdd-linux-arm64
+            fi
+        docker:
+          build:
+            file: Dockerfile.tftpdd
+            context: .
+            tag: pojntfx/tftpdd:linux-arm64
+          unitTests:
+            file: Dockerfile.unitTests
+            context: .
+            tag: pojntfx/tftpdd-unit-tests:linux-arm64
+          integrationTests:
+            file: Dockerfile.integrationTests
+            context: .
+            tag: pojntfx/tftpdd-integration-tests:linux-arm64
+          chartTests:
+            file: Dockerfile.chartTests
+            context: .
+            tag: pojntfx/tftpdd-chart-tests:linux-arm64
+  - name: tftpdd-darwin
+    platforms:
+      - identifier: darwin/amd64
+        paths:
+          watch: .
+          include: (.*)\.go
+          gitRepoRoot: .
+        commands:
+          generateSources: go generate ./...
+          build: GOOS=darwin GOARCH=amd64 CGO_ENABLED=0 go build -tags netgo -ldflags '-extldflags "-static"' -o .bin/binaries/tftpdd/tftpdd-linux-amd64 cmd/tftpdd/main.go
+          unitTests: go test -v ./...
+          integrationTests: .bin/binaries/tftpdd/tftpdd-darwin-amd64 --help
+          start: |
+            if [ "$DIBS_DEBUG" = "true" ]; then
+              pkill -9 dlv || true
+              pkill -9 tftpdd || true
+              .bin/binaries/tftpdd/tftpdd-darwin-amd64 &
+              dlv attach $! --headless --listen=:31441 --api-version=2 --accept-multiclient || true
+            else
+              .bin/binaries/tftpdd/tftpdd-darwin-amd64
+            fi
+  - name: tftpdctl-linux
+    platforms:
+      - identifier: linux/amd64
+        paths:
+          watch: .
+          include: (.*)\.go
+          assetInImage: /usr/local/bin/tftpdctl
+          assetOut: .bin/binaries/tftpdctl/tftpdctl-linux-amd64
+          gitRepoRoot: .
+        commands:
+          generateSources: go generate ./...
+          build: GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -tags netgo -ldflags '-extldflags "-static"' -o .bin/binaries/tftpdctl/tftpdctl-linux-amd64 cmd/tftpdctl/main.go
+          unitTests: go test -v ./...
+          integrationTests: .bin/binaries/tftpdctl/tftpdctl-linux-amd64 --help
+          start: .bin/binaries/tftpdctl/tftpdctl-linux-amd64 --help
+        docker:
+          build:
+            file: Dockerfile.tftpdctl
+            context: .
+            tag: pojntfx/tftpdctl:linux-amd64 # Only to get the binaries from Docker
+          unitTests:
+            file: Dockerfile.unitTests
+            context: .
+            tag: pojntfx/tftpdctl-unit-tests:linux-amd64
+          integrationTests:
+            file: Dockerfile.integrationTests
+            context: .
+            tag: pojntfx/tftpdctl-integration-tests:linux-amd64
+      - identifier: linux/arm64
+        paths:
+          watch: .
+          include: (.*)\.go
+          assetInImage: /usr/local/bin/tftpdctl
+          assetOut: .bin/binaries/tftpdctl/tftpdctl-linux-arm64
+          gitRepoRoot: .
+        commands:
+          generateSources: go generate ./...
+          build: GOOS=linux GOARCH=arm64 CGO_ENABLED=0 go build -tags netgo -ldflags '-extldflags "-static"' -o .bin/binaries/tftpdctl/tftpdctl-linux-arm64 cmd/tftpdctl/main.go
+          unitTests: go test -v ./...
+          integrationTests: .bin/binaries/tftpdctl/tftpdctl-linux-arm64 --help
+          start: .bin/binaries/tftpdctl/tftpdctl-linux-arm64 --help
+        docker:
+          build:
+            file: Dockerfile.tftpdctl
+            context: .
+            tag: pojntfx/tftpdctl:linux-arm64 # Only to get the binaries from Docker
+          unitTests:
+            file: Dockerfile.unitTests
+            context: .
+            tag: pojntfx/tftpdctl-unit-tests:linux-arm64
+          integrationTests:
+            file: Dockerfile.integrationTests
+            context: .
+            tag: pojntfx/tftpdctl-integration-tests:linux-arm64
+  - name: tftpdctl-darwin
+    platforms:
+      - identifier: darwin/amd64
+        paths:
+          watch: .
+          include: (.*)\.go
+          gitRepoRoot: .
+        commands:
+          generateSources: go generate ./...
+          build: GOOS=darwin GOARCH=amd64 CGO_ENABLED=0 go build -tags netgo -ldflags '-extldflags "-static"' -o .bin/binaries/tftpdctl/tftpdctl-darwin-amd64 cmd/tftpdctl/main.go
+          unitTests: go test -v ./...
+          integrationTests: .bin/binaries/tftpdctl/tftpdctl-darwin-amd64 --help
+          start: .bin/binaries/tftpdctl/tftpdctl-darwin-amd64 --help
