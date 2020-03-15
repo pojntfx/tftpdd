@@ -140,3 +140,16 @@ func TestGetFile(t *testing.T) {
 
 	d.Stop()
 }
+
+func TestGetBindAddress(t *testing.T) {
+	listenAddr, err := initTest()
+	if err != nil {
+		t.Error(err)
+	}
+
+	d := NewTFTPD(listenAddr, tftpRoot)
+
+	if d.GetBindAddress() != listenAddr {
+		t.Errorf("GetBindAddress did not return the expected value (expected %v, got %v)", listenAddr, d.GetBindAddress())
+	}
+}

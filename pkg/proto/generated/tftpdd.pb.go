@@ -79,6 +79,84 @@ func (m *TFTPD) GetPXEPackageURL() string {
 	return ""
 }
 
+type TFTPDManaged struct {
+	Id                   string   `protobuf:"bytes,1,opt,name=Id,proto3" json:"Id,omitempty"`
+	ListenAddress        string   `protobuf:"bytes,2,opt,name=ListenAddress,proto3" json:"ListenAddress,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *TFTPDManaged) Reset()         { *m = TFTPDManaged{} }
+func (m *TFTPDManaged) String() string { return proto.CompactTextString(m) }
+func (*TFTPDManaged) ProtoMessage()    {}
+func (*TFTPDManaged) Descriptor() ([]byte, []int) {
+	return fileDescriptor_e89185584b3bfa22, []int{1}
+}
+
+func (m *TFTPDManaged) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_TFTPDManaged.Unmarshal(m, b)
+}
+func (m *TFTPDManaged) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_TFTPDManaged.Marshal(b, m, deterministic)
+}
+func (m *TFTPDManaged) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_TFTPDManaged.Merge(m, src)
+}
+func (m *TFTPDManaged) XXX_Size() int {
+	return xxx_messageInfo_TFTPDManaged.Size(m)
+}
+func (m *TFTPDManaged) XXX_DiscardUnknown() {
+	xxx_messageInfo_TFTPDManaged.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_TFTPDManaged proto.InternalMessageInfo
+
+func (m *TFTPDManaged) GetId() string {
+	if m != nil {
+		return m.Id
+	}
+	return ""
+}
+
+func (m *TFTPDManaged) GetListenAddress() string {
+	if m != nil {
+		return m.ListenAddress
+	}
+	return ""
+}
+
+type TFTPDManagerListArgs struct {
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *TFTPDManagerListArgs) Reset()         { *m = TFTPDManagerListArgs{} }
+func (m *TFTPDManagerListArgs) String() string { return proto.CompactTextString(m) }
+func (*TFTPDManagerListArgs) ProtoMessage()    {}
+func (*TFTPDManagerListArgs) Descriptor() ([]byte, []int) {
+	return fileDescriptor_e89185584b3bfa22, []int{2}
+}
+
+func (m *TFTPDManagerListArgs) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_TFTPDManagerListArgs.Unmarshal(m, b)
+}
+func (m *TFTPDManagerListArgs) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_TFTPDManagerListArgs.Marshal(b, m, deterministic)
+}
+func (m *TFTPDManagerListArgs) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_TFTPDManagerListArgs.Merge(m, src)
+}
+func (m *TFTPDManagerListArgs) XXX_Size() int {
+	return xxx_messageInfo_TFTPDManagerListArgs.Size(m)
+}
+func (m *TFTPDManagerListArgs) XXX_DiscardUnknown() {
+	xxx_messageInfo_TFTPDManagerListArgs.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_TFTPDManagerListArgs proto.InternalMessageInfo
+
 type TFTPDId struct {
 	Id                   string   `protobuf:"bytes,1,opt,name=Id,proto3" json:"Id,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
@@ -90,7 +168,7 @@ func (m *TFTPDId) Reset()         { *m = TFTPDId{} }
 func (m *TFTPDId) String() string { return proto.CompactTextString(m) }
 func (*TFTPDId) ProtoMessage()    {}
 func (*TFTPDId) Descriptor() ([]byte, []int) {
-	return fileDescriptor_e89185584b3bfa22, []int{1}
+	return fileDescriptor_e89185584b3bfa22, []int{3}
 }
 
 func (m *TFTPDId) XXX_Unmarshal(b []byte) error {
@@ -118,9 +196,51 @@ func (m *TFTPDId) GetId() string {
 	return ""
 }
 
+type TFTPDManagerListReply struct {
+	TFTPDs               []*TFTPDManaged `protobuf:"bytes,1,rep,name=TFTPDs,proto3" json:"TFTPDs,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}        `json:"-"`
+	XXX_unrecognized     []byte          `json:"-"`
+	XXX_sizecache        int32           `json:"-"`
+}
+
+func (m *TFTPDManagerListReply) Reset()         { *m = TFTPDManagerListReply{} }
+func (m *TFTPDManagerListReply) String() string { return proto.CompactTextString(m) }
+func (*TFTPDManagerListReply) ProtoMessage()    {}
+func (*TFTPDManagerListReply) Descriptor() ([]byte, []int) {
+	return fileDescriptor_e89185584b3bfa22, []int{4}
+}
+
+func (m *TFTPDManagerListReply) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_TFTPDManagerListReply.Unmarshal(m, b)
+}
+func (m *TFTPDManagerListReply) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_TFTPDManagerListReply.Marshal(b, m, deterministic)
+}
+func (m *TFTPDManagerListReply) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_TFTPDManagerListReply.Merge(m, src)
+}
+func (m *TFTPDManagerListReply) XXX_Size() int {
+	return xxx_messageInfo_TFTPDManagerListReply.Size(m)
+}
+func (m *TFTPDManagerListReply) XXX_DiscardUnknown() {
+	xxx_messageInfo_TFTPDManagerListReply.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_TFTPDManagerListReply proto.InternalMessageInfo
+
+func (m *TFTPDManagerListReply) GetTFTPDs() []*TFTPDManaged {
+	if m != nil {
+		return m.TFTPDs
+	}
+	return nil
+}
+
 func init() {
 	proto.RegisterType((*TFTPD)(nil), "TFTPDD.TFTPD")
+	proto.RegisterType((*TFTPDManaged)(nil), "TFTPDD.TFTPDManaged")
+	proto.RegisterType((*TFTPDManagerListArgs)(nil), "TFTPDD.TFTPDManagerListArgs")
 	proto.RegisterType((*TFTPDId)(nil), "TFTPDD.TFTPDId")
+	proto.RegisterType((*TFTPDManagerListReply)(nil), "TFTPDD.TFTPDManagerListReply")
 }
 
 func init() {
@@ -128,18 +248,24 @@ func init() {
 }
 
 var fileDescriptor_e89185584b3bfa22 = []byte{
-	// 172 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xe2, 0xe2, 0x29, 0x49, 0x2b, 0x29,
-	0x48, 0x49, 0xd1, 0x2b, 0x28, 0xca, 0x2f, 0xc9, 0x17, 0x62, 0x0b, 0x71, 0x0b, 0x09, 0x70, 0x71,
-	0x51, 0x8a, 0xe4, 0x62, 0x05, 0xb3, 0x84, 0xc4, 0xb8, 0xd8, 0x5c, 0x52, 0xcb, 0x32, 0x93, 0x53,
-	0x25, 0x18, 0x15, 0x18, 0x35, 0x38, 0x83, 0xa0, 0x3c, 0x21, 0x21, 0x2e, 0x96, 0x80, 0xfc, 0xa2,
-	0x12, 0x09, 0x26, 0x05, 0x46, 0x0d, 0xe6, 0x20, 0x30, 0x5b, 0x48, 0x85, 0x8b, 0x37, 0x20, 0xc2,
-	0x35, 0x20, 0x31, 0x39, 0x3b, 0x31, 0x3d, 0x35, 0x34, 0xc8, 0x47, 0x82, 0x19, 0xac, 0x05, 0x55,
-	0x50, 0x49, 0x92, 0x8b, 0x1d, 0x6c, 0xb4, 0x67, 0x8a, 0x10, 0x1f, 0x17, 0x93, 0x67, 0x0a, 0xd4,
-	0x60, 0x26, 0xcf, 0x14, 0x23, 0x6b, 0x2e, 0x5e, 0x88, 0xfd, 0xbe, 0x89, 0x79, 0x89, 0xe9, 0xa9,
-	0x45, 0x42, 0x5a, 0x5c, 0x6c, 0xce, 0x45, 0xa9, 0x89, 0x25, 0xa9, 0x42, 0xbc, 0x7a, 0x10, 0x19,
-	0x08, 0x25, 0xc5, 0x8f, 0xc2, 0xf5, 0x4c, 0x51, 0x62, 0x48, 0x62, 0x03, 0xfb, 0xc0, 0x18, 0x10,
-	0x00, 0x00, 0xff, 0xff, 0x16, 0x4b, 0xae, 0x99, 0xd1, 0x00, 0x00, 0x00,
+	// 269 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x74, 0x91, 0x4f, 0x4b, 0xc3, 0x40,
+	0x10, 0xc5, 0xbb, 0x4d, 0x8d, 0x74, 0x6c, 0x14, 0x86, 0x5a, 0x62, 0x51, 0x08, 0x8b, 0x87, 0x20,
+	0x92, 0x43, 0xfd, 0x04, 0xc5, 0x44, 0x08, 0x54, 0x08, 0x4b, 0x05, 0x3d, 0xae, 0xdd, 0x31, 0x14,
+	0xa5, 0x09, 0xbb, 0x8b, 0xe0, 0xd5, 0x4f, 0x2e, 0xd9, 0x04, 0x69, 0xfc, 0x73, 0x9b, 0x99, 0x97,
+	0xf7, 0x7b, 0x33, 0x59, 0x98, 0xd8, 0x17, 0x5b, 0x2b, 0x95, 0xd4, 0xba, 0xb2, 0x15, 0xfa, 0xeb,
+	0xbb, 0x75, 0x91, 0xa6, 0xfc, 0x09, 0x0e, 0x5c, 0x85, 0x33, 0xf0, 0x53, 0x7a, 0xdf, 0x6e, 0x28,
+	0x64, 0x11, 0x8b, 0xc7, 0xa2, 0xeb, 0x10, 0x61, 0x54, 0x54, 0xda, 0x86, 0xc3, 0x88, 0xc5, 0x9e,
+	0x70, 0x35, 0x5e, 0x42, 0x50, 0x3c, 0x66, 0x85, 0xdc, 0xbc, 0xca, 0x92, 0x1e, 0xc4, 0x2a, 0xf4,
+	0x9c, 0xa5, 0x3f, 0xe4, 0x29, 0x4c, 0x1c, 0xfa, 0x5e, 0xee, 0x64, 0x49, 0x0a, 0x8f, 0x61, 0x98,
+	0xab, 0x8e, 0x3e, 0xcc, 0x55, 0x43, 0x59, 0x6d, 0x8d, 0xa5, 0xdd, 0x52, 0x29, 0x4d, 0xc6, 0xb8,
+	0x88, 0xb1, 0xe8, 0x0f, 0xf9, 0x0c, 0xa6, 0x7b, 0x14, 0xdd, 0x88, 0x4b, 0x5d, 0x1a, 0x7e, 0x06,
+	0x87, 0x6e, 0x9e, 0xff, 0x02, 0xf3, 0x0c, 0x4e, 0x7f, 0x5a, 0x04, 0xd5, 0x6f, 0x1f, 0x78, 0x0d,
+	0xed, 0xd9, 0x26, 0x64, 0x91, 0x17, 0x1f, 0x2d, 0xa6, 0x49, 0xfb, 0x17, 0x92, 0xfd, 0x3d, 0x45,
+	0xf7, 0xcd, 0xe2, 0x93, 0x41, 0xd0, 0xea, 0x1d, 0x08, 0xaf, 0xc0, 0xbf, 0xd5, 0x24, 0x2d, 0x61,
+	0xd0, 0x73, 0xce, 0x4f, 0x7a, 0x6d, 0xae, 0xf8, 0x00, 0x33, 0x18, 0x35, 0xc1, 0x78, 0xfe, 0x47,
+	0xc6, 0xf7, 0x15, 0xf3, 0x8b, 0xff, 0x54, 0xb7, 0x30, 0x1f, 0x3c, 0xfb, 0xee, 0xb9, 0x6e, 0xbe,
+	0x02, 0x00, 0x00, 0xff, 0xff, 0x94, 0x31, 0xa1, 0x57, 0xbe, 0x01, 0x00, 0x00,
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -155,6 +281,7 @@ const _ = grpc.SupportPackageIsVersion6
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
 type TFTPDDManagerClient interface {
 	Create(ctx context.Context, in *TFTPD, opts ...grpc.CallOption) (*TFTPDId, error)
+	List(ctx context.Context, in *TFTPDManagerListArgs, opts ...grpc.CallOption) (*TFTPDManagerListReply, error)
 }
 
 type tFTPDDManagerClient struct {
@@ -174,9 +301,19 @@ func (c *tFTPDDManagerClient) Create(ctx context.Context, in *TFTPD, opts ...grp
 	return out, nil
 }
 
+func (c *tFTPDDManagerClient) List(ctx context.Context, in *TFTPDManagerListArgs, opts ...grpc.CallOption) (*TFTPDManagerListReply, error) {
+	out := new(TFTPDManagerListReply)
+	err := c.cc.Invoke(ctx, "/TFTPDD.TFTPDDManager/List", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // TFTPDDManagerServer is the server API for TFTPDDManager service.
 type TFTPDDManagerServer interface {
 	Create(context.Context, *TFTPD) (*TFTPDId, error)
+	List(context.Context, *TFTPDManagerListArgs) (*TFTPDManagerListReply, error)
 }
 
 // UnimplementedTFTPDDManagerServer can be embedded to have forward compatible implementations.
@@ -185,6 +322,9 @@ type UnimplementedTFTPDDManagerServer struct {
 
 func (*UnimplementedTFTPDDManagerServer) Create(ctx context.Context, req *TFTPD) (*TFTPDId, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Create not implemented")
+}
+func (*UnimplementedTFTPDDManagerServer) List(ctx context.Context, req *TFTPDManagerListArgs) (*TFTPDManagerListReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method List not implemented")
 }
 
 func RegisterTFTPDDManagerServer(s *grpc.Server, srv TFTPDDManagerServer) {
@@ -209,6 +349,24 @@ func _TFTPDDManager_Create_Handler(srv interface{}, ctx context.Context, dec fun
 	return interceptor(ctx, in, info, handler)
 }
 
+func _TFTPDDManager_List_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(TFTPDManagerListArgs)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TFTPDDManagerServer).List(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/TFTPDD.TFTPDDManager/List",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TFTPDDManagerServer).List(ctx, req.(*TFTPDManagerListArgs))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 var _TFTPDDManager_serviceDesc = grpc.ServiceDesc{
 	ServiceName: "TFTPDD.TFTPDDManager",
 	HandlerType: (*TFTPDDManagerServer)(nil),
@@ -216,6 +374,10 @@ var _TFTPDDManager_serviceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Create",
 			Handler:    _TFTPDDManager_Create_Handler,
+		},
+		{
+			MethodName: "List",
+			Handler:    _TFTPDDManager_List_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
