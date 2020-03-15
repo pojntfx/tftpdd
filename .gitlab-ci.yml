@@ -1,0 +1,227 @@
+.dibsJob: &dibsJob
+  image: docker:stable
+  services:
+    - name: docker:dind
+      command:
+        - "--experimental"
+  variables:
+    DOCKER_HOST: tcp://docker:2375/
+  before_script:
+    # Install curl and tar
+    - apk add -u curl tar
+    # Install qemu-user-static
+    - docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
+    # Install buildx
+    - curl -Lo /tmp/docker-buildx https://github.com/docker/buildx/releases/download/v0.3.1/buildx-v0.3.1.linux-amd64
+    - mkdir -p ~/.docker/cli-plugins/
+    - install /tmp/docker-buildx ~/.docker/cli-plugins
+    - docker buildx create --name dibs
+    - docker buildx use dibs
+    - docker buildx inspect --bootstrap
+    # Install Helm
+    - curl -L https://get.helm.sh/helm-v3.1.1-linux-amd64.tar.gz | tar -zvxf - linux-amd64/helm -O >/tmp/helm
+    - install /tmp/helm /usr/local/bin
+    # Install ghr
+    - curl -L https://github.com/tcnksm/ghr/releases/download/v0.13.0/ghr_v0.13.0_linux_amd64.tar.gz | tar -zvxf - ghr_v0.13.0_linux_amd64/ghr
+    - install ghr_v0.13.0_linux_amd64/ghr /usr/local/bin
+    # Install Chart Releaser
+    - curl -L https://github.com/helm/chart-releaser/releases/download/v0.2.3/chart-releaser_0.2.3_linux_amd64.tar.gz | tar -zvxf - cr
+    - install cr /usr/local/bin
+    # Install dibs
+    - curl -Lo /tmp/dibs https://github.com/pojntfx/dibs/releases/latest/download/dibs-linux-amd64
+    - install /tmp/dibs /usr/local/bin
+    # Login to Docker Hub
+    - docker login ${DOCKER_REGISTRY} --username ${DOCKER_USERNAME} --password ${DOCKER_PASSWORD}
+
+stages:
+  # Unit tests
+  - tftpdd:unitTest
+  - tftpdctl:unitTest
+  # Integration tests
+  - tftpdd:integrationTest
+  - tftpdctl:integrationTest
+  # Build and push images
+  - tftpdd:buildAndPushImage
+  # Build and push manifest and binaries
+  - tftpdd:buildAndPushManifestAndBinaries
+  # Build and push binaries
+  - tftpdctl:buildAndPushBinaries
+  # Chart integration tests
+  - tftpdd:chartIntegrationTest
+  # Build and push charts
+  - tftpdd:buildAndPushChart
+
+# Unit tests
+tftpdd:unitTestAMD64:
+  <<: *dibsJob
+  stage: tftpdd:unitTest
+  script:
+    - dibs -unitTests -target tftpdd-linux -platform linux/amd64 -docker
+tftpdd:unitTestARM64:
+  <<: *dibsJob
+  stage: tftpdd:unitTest
+  script:
+    - dibs -unitTests -target tftpdd-linux -platform linux/arm64 -docker
+
+tftpdctl:unitTestAMD64:
+  <<: *dibsJob
+  stage: tftpdctl:unitTest
+  script:
+    - dibs -unitTests -target tftpdctl-linux -platform linux/amd64 -docker
+tftpdctl:unitTestARM64:
+  <<: *dibsJob
+  stage: tftpdctl:unitTest
+  script:
+    - dibs -unitTests -target tftpdctl-linux -platform linux/arm64 -docker
+
+# Integration tests
+tftpdd:integrationTestAMD64:
+  <<: *dibsJob
+  stage: tftpdd:integrationTest
+  script:
+    - dibs -integrationTests -target tftpdd-linux -platform linux/amd64 -docker
+tftpdd:integrationTestARM64:
+  <<: *dibsJob
+  stage: tftpdd:integrationTest
+  script:
+    - dibs -integrationTests -target tftpdd-linux -platform linux/arm64 -docker
+
+tftpdctl:integrationTestAMD64:
+  <<: *dibsJob
+  stage: tftpdctl:integrationTest
+  script:
+    - dibs -integrationTests -target tftpdctl-linux -platform linux/amd64 -docker
+tftpdctl:integrationTestARM64:
+  <<: *dibsJob
+  stage: tftpdctl:integrationTest
+  script:
+    - dibs -integrationTests -target tftpdctl-linux -platform linux/arm64 -docker
+
+# Image tests
+# amd64 is disabled for now due to a GitLab bug where it does not exit after being run
+#tftpdd:imageTestsAMD64:
+#  <<: *dibsJob
+#  stage: tftpdd:integrationTest
+#  script:
+#    - dibs -buildImage -target tftpdd-linux -platform linux/amd64
+#    - dibs -imageTests -target tftpdd-linux -platform linux/amd64
+tftpdd:imageTestsARM64:
+  <<: *dibsJob
+  stage: tftpdd:integrationTest
+  script:
+    - dibs -buildImage -target tftpdd-linux -platform linux/arm64
+    - dibs -imageTests -target tftpdd-linux -platform linux/arm64
+
+# Build and push image
+tftpdd:buildAndPushImageAMD64:
+  <<: *dibsJob
+  stage: tftpdd:buildAndPushImage
+  script:
+    - dibs -buildImage -target tftpdd-linux -platform linux/amd64
+    - dibs -pushImage -target tftpdd-linux -platform linux/amd64
+  only:
+    - tags
+tftpdd:buildAndPushImageARM64:
+  <<: *dibsJob
+  stage: tftpdd:buildAndPushImage
+  script:
+    - dibs -buildImage -target tftpdd-linux -platform linux/arm64
+    - dibs -pushImage -target tftpdd-linux -platform linux/arm64
+  only:
+    - tags
+
+# Build and push manifest
+tftpdd:buildAndPushManifest:
+  <<: *dibsJob
+  stage: tftpdd:buildAndPushManifestAndBinaries
+  script:
+    - dibs -buildManifest -target tftpdd-linux
+    - dibs -pushManifest -target tftpdd-linux
+  only:
+    - tags
+
+# Build and push binaries
+tftpdd:buildAndPushBinariesAMD64:
+  <<: *dibsJob
+  stage: tftpdd:buildAndPushManifestAndBinaries
+  script:
+    - dibs -build -target tftpdd-linux -platform linux/amd64 -docker
+    - dibs -pushBinary -target tftpdd-linux -platform linux/amd64
+  artifacts:
+    name: tftpdd-binaries-amd64
+    paths:
+      - .bin/binaries/tftpdd
+    expire_in: 1 month
+  only:
+    - tags
+tftpdd:buildAndPushBinariesARM64:
+  <<: *dibsJob
+  stage: tftpdd:buildAndPushManifestAndBinaries
+  script:
+    - dibs -build -target tftpdd-linux -platform linux/arm64 -docker
+    - dibs -pushBinary -target tftpdd-linux -platform linux/arm64
+  artifacts:
+    name: tftpdd-binaries-arm64
+    paths:
+      - .bin/binaries/tftpdd
+    expire_in: 1 month
+  only:
+    - tags
+
+tftpdctl:buildAndPushBinariesAMD64:
+  <<: *dibsJob
+  stage: tftpdctl:buildAndPushBinaries
+  script:
+    - dibs -build -target tftpdctl-linux -platform linux/amd64 -docker
+    - dibs -pushBinary -target tftpdctl-linux -platform linux/amd64
+  artifacts:
+    name: tftpdctl-binaries-amd64
+    paths:
+      - .bin/binaries/tftpdctl
+    expire_in: 1 month
+  only:
+    - tags
+tftpdctl:buildAndPushBinariesARM64:
+  <<: *dibsJob
+  stage: tftpdctl:buildAndPushBinaries
+  script:
+    - dibs -build -target tftpdctl-linux -platform linux/arm64 -docker
+    - dibs -pushBinary -target tftpdctl-linux -platform linux/arm64
+  artifacts:
+    name: tftpdctl-binaries-arm64
+    paths:
+      - .bin/binaries/tftpdctl
+    expire_in: 1 month
+  only:
+    - tags
+
+# Chart tests
+tftpdd:chartTestsAMD64:
+  <<: *dibsJob
+  stage: tftpdd:chartIntegrationTest
+  script:
+    - dibs -chartTests -target tftpdd-linux -platform linux/amd64 -docker
+  only:
+    - tags
+tftpdd:chartTestsARM64:
+  <<: *dibsJob
+  stage: tftpdd:chartIntegrationTest
+  script:
+    - dibs -chartTests -target tftpdd-linux -platform linux/arm64 -docker
+  only:
+    - tags
+
+# Build and push chart
+tftpdd:buildAndPushChart:
+  <<: *dibsJob
+  stage: tftpdd:buildAndPushChart
+  script:
+    - dibs -buildChart -target tftpdd-linux
+    - dibs -pushChart -target tftpdd-linux
+  artifacts:
+    name: tftpdd-chart
+    paths:
+      - .bin/chart/tftpdd
+    expire_in: 1 month
+  only:
+    - tags
