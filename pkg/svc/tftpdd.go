@@ -126,3 +126,24 @@ func (t *TFTPDManager) Get(ctx context.Context, req *TFTPDD.TFTPDId) (*TFTPDD.TF
 
 	return nil, status.Error(codes.NotFound, msg)
 }
+
+// Delete deletes one of the managed TFTP servers.
+func (t *TFTPDManager) Delete(ctx context.Context, req *TFTPDD.TFTPDId) (*TFTPDD.TFTPDId, error) {
+	log.Info("Stopping TFTP server")
+
+	for id, worker := range t.workers {
+		if id == req.GetId() {
+			worker.Stop()
+
+			return &TFTPDD.TFTPDId{
+				Id: id,
+			}, nil
+		}
+	}
+
+	msg := "TFTP server not found"
+
+	log.Error(msg)
+
+	return nil, status.Error(codes.NotFound, msg)
+}
