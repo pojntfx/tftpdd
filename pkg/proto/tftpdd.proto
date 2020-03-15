@@ -6,6 +6,7 @@ package TFTPDD;
 service TFTPDDManager {
   rpc Create(TFTPD) returns (TFTPDId) {};
   rpc List(TFTPDManagerListArgs) returns (TFTPDManagerListReply) {};
+  rpc Get(TFTPDId) returns (TFTPDManaged) {};
 }
 
 message TFTPD {

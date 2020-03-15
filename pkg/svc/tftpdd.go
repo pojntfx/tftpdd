@@ -69,7 +69,7 @@ func (t *TFTPDManager) Create(ctx context.Context, req *TFTPDD.TFTPD) (*TFTPDD.T
 
 	go func() {
 		if err := worker.Start(); err != nil {
-			log.Info("Error while starting TFTP server", rz.Err(err))
+			log.Error("Error while starting TFTP server", rz.Err(err))
 		}
 	}()
 
@@ -97,4 +97,31 @@ func (t *TFTPDManager) List(ctx context.Context, req *TFTPDD.TFTPDManagerListArg
 	return &TFTPDD.TFTPDManagerListReply{
 		TFTPDs: res,
 	}, nil
+}
+
+// Get gets one of the managed TFTP servers.
+func (t *TFTPDManager) Get(ctx context.Context, req *TFTPDD.TFTPDId) (*TFTPDD.TFTPDManaged, error) {
+	log.Info("Getting TFTP server")
+
+	var res *TFTPDD.TFTPDManaged
+	for id, worker := range t.workers {
+		if id == req.GetId() {
+			res = &TFTPDD.TFTPDManaged{
+				Id:            id,
+				ListenAddress: worker.GetBindAddress(),
+			}
+
+			break
+		}
+	}
+
+	if res != nil {
+		return res, nil
+	}
+
+	msg := "TFTP server not found"
+
+	log.Error(msg)
+
+	return nil, status.Error(codes.NotFound, msg)
 }
