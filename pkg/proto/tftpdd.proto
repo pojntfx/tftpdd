@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package TFTPDD;
+
+// TFTPDDManager manages TFTP servers.
+service TFTPDDManager {
+  rpc Create(TFTPD) returns (TFTPDId) {};
+}
+
+message TFTPD {
+  string Device = 1;
+  string PXEPackageURL = 2;
+}
+
+message TFTPDId { string Id = 1; }
