@@ -1,15 +1,21 @@
 package main
 
 import (
-	"fmt"
+	"net"
+	"os"
+	"os/signal"
 	"strings"
-	"time"
+	"syscall"
 
 	constants "github.com/pojntfx/tftpdd/cmd"
+	TFTPDD "github.com/pojntfx/tftpdd/pkg/proto/generated"
+	"github.com/pojntfx/tftpdd/pkg/svc"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 	"gitlab.com/bloom42/libs/rz-go"
 	"gitlab.com/bloom42/libs/rz-go/log"
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/reflection"
 )
 
 const (
@@ -39,9 +45,41 @@ https://pojntfx.github.io/tftpdd/`,
 			}
 		}
 
-		for {
-			fmt.Println("Starting server")
-			time.Sleep(time.Second * 1)
+		listener, err := net.Listen("tcp", viper.GetString(listenHostPortKey))
+		if err != nil {
+			return err
+		}
+
+		server := grpc.NewServer()
+		reflection.Register(server)
+
+		tftpdService := svc.NewTFTPDManager()
+
+		TFTPDD.RegisterTFTPDDManagerServer(server, tftpdService)
+
+		interrupt := make(chan os.Signal, 2)
+		signal.Notify(interrupt, os.Interrupt, syscall.SIGTERM)
+		go func() {
+			<-interrupt
+
+			// Allow manually killing the process
+			go func() {
+				<-interrupt
+
+				os.Exit(1)
+			}()
+
+			log.Info("Gracefully stopping server (this might take a few seconds)")
+
+			tftpdService.Stop()
+
+			server.GracefulStop()
+		}()
+
+		log.Info("Starting server")
+
+		if err := server.Serve(listener); err != nil {
+			return err
 		}
 
 		return nil
