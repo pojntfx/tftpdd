@@ -24,21 +24,26 @@ import (
 type TFTPDManager struct {
 	TFTPDD.UnimplementedTFTPDDManagerServer
 	baseDir string
-	workers map[string]*workers.TFTPD
+	workers map[string]*managedWorker
+}
+
+type managedWorker struct {
+	worker *workers.TFTPD
+	status string
 }
 
 // NewTFTPDManager creates a new TFTPDManager.
 func NewTFTPDManager(baseDir string) *TFTPDManager {
 	return &TFTPDManager{
 		baseDir: baseDir,
-		workers: make(map[string]*workers.TFTPD), // TODO: Add status
+		workers: make(map[string]*managedWorker),
 	}
 }
 
 // Stop stops the workers the TFTPDManager manages.
 func (t *TFTPDManager) Stop() {
 	for _, worker := range t.workers {
-		worker.Stop()
+		worker.worker.Stop()
 	}
 }
 
@@ -66,10 +71,12 @@ func (t *TFTPDManager) Create(ctx context.Context, req *TFTPDD.TFTPD) (*TFTPDD.T
 		return nil, err
 	}
 
-	worker := workers.NewTFTPD(bindAddress, dir)
+	worker := &managedWorker{worker: workers.NewTFTPD(bindAddress, dir), status: "up"}
 
 	go func() {
-		if err := worker.Start(); err != nil {
+		if err := worker.worker.Start(); err != nil {
+			worker.status = err.Error()
+
 			log.Error("Error while starting TFTP server", rz.Err(err))
 		}
 	}()
@@ -89,7 +96,8 @@ func (t *TFTPDManager) List(ctx context.Context, req *TFTPDD.TFTPDManagerListArg
 	for id, worker := range t.workers {
 		outWorker := &TFTPDD.TFTPDManaged{
 			Id:            id,
-			ListenAddress: worker.GetBindAddress(),
+			ListenAddress: worker.worker.GetBindAddress(),
+			Status:        worker.status,
 		}
 
 		res = append(res, outWorker)
@@ -110,7 +118,8 @@ func (t *TFTPDManager) Get(ctx context.Context, req *TFTPDD.TFTPDId) (*TFTPDD.TF
 	if worker != nil {
 		return &TFTPDD.TFTPDManaged{
 			Id:            id,
-			ListenAddress: worker.GetBindAddress(),
+			ListenAddress: worker.worker.GetBindAddress(),
+			Status:        worker.status,
 		}, nil
 	}
 
