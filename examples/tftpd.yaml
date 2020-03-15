@@ -1,4 +1,4 @@
 tftpd:
   device: eth0
   port: 69
-  pxepackageURL: http://minio.pxepackagerd.felicitas.pojtinger.com/pxepackagerd/1/bin/one.pxepackage
+  biosFilenameURL: http://minio.pxepackagerd.felicitas.pojtinger.com/pxepackagerd/1/bin/undionly.kpxe

@@ -38,9 +38,9 @@ var applyCmd = &cobra.Command{
 		defer cancel()
 
 		response, err := client.Create(ctx, &tftpdd.TFTPD{
-			Device:        viper.GetString(deviceKey),
-			Port:          viper.GetInt64(portKey),
-			PXEPackageURL: viper.GetString(pxepackageURLKey),
+			Device:          viper.GetString(deviceKey),
+			Port:            viper.GetInt64(portKey),
+			BIOSFilenameURL: viper.GetString(biosFilenameURLKey),
 		})
 		if err != nil {
 			return err
@@ -54,16 +54,16 @@ var applyCmd = &cobra.Command{
 
 func init() {
 	var (
-		deviceFlag        string
-		portFlag          int
-		pxepackageURLFlag string
+		deviceFlag          string
+		portFlag            int
+		biosFilenameURLFlag string
 	)
 
 	applyCmd.PersistentFlags().StringVarP(&serverHostPortFlag, serverHostPortKey, "s", constants.TFTPDDHostPortDefault, constants.HostPortDocs)
 	applyCmd.PersistentFlags().StringVarP(&configFileFlag, configFileKey, "f", configFileDefault, constants.ConfigurationFileDocs)
 	applyCmd.PersistentFlags().StringVarP(&deviceFlag, deviceKey, "d", "eth0", "Device to bind the TFTP server to")
 	applyCmd.PersistentFlags().IntVarP(&portFlag, portKey, "p", 69, "Port to bind the TFTP server to.")
-	applyCmd.PersistentFlags().StringVarP(&pxepackageURLFlag, pxepackageURLKey, "i", "http://minio.pxepackagerd.felicitas.pojtinger.com/pxepackagerd/1/bin/one.pxepackage", "PXE package to use.")
+	applyCmd.PersistentFlags().StringVarP(&biosFilenameURLFlag, biosFilenameURLKey, "b", "", "BIOS filename to use.")
 
 	if err := viper.BindPFlags(applyCmd.PersistentFlags()); err != nil {
 		log.Fatal(constants.CouldNotBindFlagsErrorMessage, rz.Err(err))

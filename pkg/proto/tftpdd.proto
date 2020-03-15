@@ -13,7 +13,7 @@ service TFTPDDManager {
 message TFTPD {
   string Device = 1;
   int64 Port = 2;
-  string PXEPackageURL = 3;
+  string BIOSFilenameURL = 3;
 }
 
 message TFTPDManaged {
