@@ -9,7 +9,8 @@ service TFTPDDManager {
 
 message TFTPD {
   string Device = 1;
-  string PXEPackageURL = 2;
+  int64 Port = 2;
+  string PXEPackageURL = 3;
 }
 
 message TFTPDId { string Id = 1; }
