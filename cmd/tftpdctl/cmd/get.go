@@ -40,12 +40,14 @@ var getCmd = &cobra.Command{
 			table := uitable.New()
 			table.AddRow(
 				"ID",
-				"LISTEN ADDRESS")
+				"LISTEN ADDRESS",
+				"STATUS")
 
 			for _, DHCPD := range response.GetTFTPDs() {
 				table.AddRow(
 					DHCPD.GetId(),
-					DHCPD.GetListenAddress())
+					DHCPD.GetListenAddress(),
+					DHCPD.GetStatus())
 			}
 
 			fmt.Println(table)

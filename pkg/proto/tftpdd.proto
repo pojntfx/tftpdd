@@ -19,6 +19,7 @@ message TFTPD {
 message TFTPDManaged {
   string Id = 1;
   string ListenAddress = 2;
+  string Status = 3;
 }
 
 message TFTPDManagerListArgs {}
