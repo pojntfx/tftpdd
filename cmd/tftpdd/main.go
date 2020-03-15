@@ -53,7 +53,7 @@ https://pojntfx.github.io/tftpdd/`,
 		server := grpc.NewServer()
 		reflection.Register(server)
 
-		tftpdService := svc.NewTFTPDManager()
+		tftpdService := svc.NewTFTPDManager(os.TempDir())
 
 		TFTPDD.RegisterTFTPDDManagerServer(server, tftpdService)
 

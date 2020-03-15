@@ -39,6 +39,7 @@ var applyCmd = &cobra.Command{
 
 		response, err := client.Create(ctx, &tftpdd.TFTPD{
 			Device:        viper.GetString(deviceKey),
+			Port:          viper.GetInt64(portKey),
 			PXEPackageURL: viper.GetString(pxepackageURLKey),
 		})
 		if err != nil {
@@ -54,13 +55,15 @@ var applyCmd = &cobra.Command{
 func init() {
 	var (
 		deviceFlag        string
+		portFlag          int
 		pxepackageURLFlag string
 	)
 
 	applyCmd.PersistentFlags().StringVarP(&serverHostPortFlag, serverHostPortKey, "s", constants.TFTPDDHostPortDefault, constants.HostPortDocs)
 	applyCmd.PersistentFlags().StringVarP(&configFileFlag, configFileKey, "f", configFileDefault, constants.ConfigurationFileDocs)
 	applyCmd.PersistentFlags().StringVarP(&deviceFlag, deviceKey, "d", "eth0", "Device to bind the TFTP server to")
-	applyCmd.PersistentFlags().StringVarP(&pxepackageURLFlag, pxepackageURLKey, "p", "http://minio.pxepackagerd.felicitas.pojtinger.com/pxepackagerd/1/bin/one.pxepackage", "PXE package to use.")
+	applyCmd.PersistentFlags().IntVarP(&portFlag, portKey, "p", 69, "Port to bind the TFTP server to.")
+	applyCmd.PersistentFlags().StringVarP(&pxepackageURLFlag, pxepackageURLKey, "i", "http://minio.pxepackagerd.felicitas.pojtinger.com/pxepackagerd/1/bin/one.pxepackage", "PXE package to use.")
 
 	if err := viper.BindPFlags(applyCmd.PersistentFlags()); err != nil {
 		log.Fatal(constants.CouldNotBindFlagsErrorMessage, rz.Err(err))

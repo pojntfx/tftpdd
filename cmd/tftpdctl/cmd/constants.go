@@ -6,6 +6,7 @@ const (
 	serverHostPortKey = keyPrefix + "serverHostPort"
 	configFileKey     = keyPrefix + "configFile"
 	deviceKey         = keyPrefix + "device"
+	portKey           = keyPrefix + "port"
 	pxepackageURLKey  = keyPrefix + "pxepackageURL"
 )
 

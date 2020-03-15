@@ -1,0 +1,2 @@
+tftpdd:
+  listenHostPort: localhost:1340

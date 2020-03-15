@@ -18,7 +18,7 @@ targets:
           unitTests: |
             if [ "$DIBS_DEBUG" = "true" ]; then
               pkill -9 dlv || true
-              dlv test --headless --listen=localhost:31441 --api-version=2 ./pkg/... || true
+              dlv test --headless --listen=localhost:31441 --api-version=2 ./pkg/workers/... || true
             else
               go test -v ./...
             fi
@@ -64,7 +64,7 @@ targets:
           unitTests: |
             if [ "$DIBS_DEBUG" = "true" ]; then
               pkill -9 dlv || true
-              dlv test --headless --listen=localhost:31441 --api-version=2 ./pkg/... || true
+              dlv test --headless --listen=localhost:31441 --api-version=2 ./pkg/workers/... || true
             else
               go test -v ./...
             fi
@@ -110,7 +110,7 @@ targets:
           unitTests: |
             if [ "$DIBS_DEBUG" = "true" ]; then
               pkill -9 dlv || true
-              dlv test --headless --listen=localhost:31441 --api-version=2 ./pkg/... || true
+              dlv test --headless --listen=localhost:31441 --api-version=2 ./pkg/workers/... || true
             else
               go test -v ./...
             fi
