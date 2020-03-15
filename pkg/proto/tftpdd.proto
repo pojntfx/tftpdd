@@ -5,6 +5,7 @@ package TFTPDD;
 // TFTPDDManager manages TFTP servers.
 service TFTPDDManager {
   rpc Create(TFTPD) returns (TFTPDId) {};
+  rpc List(TFTPDManagerListArgs) returns (TFTPDManagerListReply) {};
 }
 
 message TFTPD {
@@ -13,4 +14,13 @@ message TFTPD {
   string PXEPackageURL = 3;
 }
 
+message TFTPDManaged {
+  string Id = 1;
+  string ListenAddress = 2;
+}
+
+message TFTPDManagerListArgs {}
+
 message TFTPDId { string Id = 1; }
+
+message TFTPDManagerListReply { repeated TFTPDManaged TFTPDs = 1; }

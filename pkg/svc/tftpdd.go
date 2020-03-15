@@ -79,3 +79,22 @@ func (t *TFTPDManager) Create(ctx context.Context, req *TFTPDD.TFTPD) (*TFTPDD.T
 		Id: id,
 	}, nil
 }
+
+// List lists managed TFTP servers.
+func (t *TFTPDManager) List(ctx context.Context, req *TFTPDD.TFTPDManagerListArgs) (*TFTPDD.TFTPDManagerListReply, error) {
+	log.Info("Listing TFTP servers")
+
+	var res []*TFTPDD.TFTPDManaged
+	for id, worker := range t.workers {
+		outWorker := &TFTPDD.TFTPDManaged{
+			Id:            id,
+			ListenAddress: worker.GetBindAddress(),
+		}
+
+		res = append(res, outWorker)
+	}
+
+	return &TFTPDD.TFTPDManagerListReply{
+		TFTPDs: res,
+	}, nil
+}

@@ -50,3 +50,8 @@ func (t *TFTPD) Start() error {
 func (t *TFTPD) Stop() {
 	t.instance.Shutdown()
 }
+
+// GetBindAddress returns the bound address.
+func (t *TFTPD) GetBindAddress() string {
+	return t.bindAddress
+}
