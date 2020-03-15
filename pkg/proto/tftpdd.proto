@@ -7,6 +7,7 @@ service TFTPDDManager {
   rpc Create(TFTPD) returns (TFTPDId) {};
   rpc List(TFTPDManagerListArgs) returns (TFTPDManagerListReply) {};
   rpc Get(TFTPDId) returns (TFTPDManaged) {};
+  rpc Delete(TFTPDId) returns (TFTPDId) {};
 }
 
 message TFTPD {
