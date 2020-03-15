@@ -43,6 +43,7 @@ func (t *TFTPDManager) Stop() {
 }
 
 // Create creates a TFTP server.
+// TODO: Download BIOS `filename` with a HTTP client
 func (t *TFTPDManager) Create(ctx context.Context, req *TFTPDD.TFTPD) (*TFTPDD.TFTPDId, error) {
 	log.Info("Starting TFTP server")
 
