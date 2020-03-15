@@ -1,13 +1,13 @@
 package cmd
 
 const (
-	keyPrefix         = "tftpd."
-	configFileDefault = ""
-	serverHostPortKey = keyPrefix + "serverHostPort"
-	configFileKey     = keyPrefix + "configFile"
-	deviceKey         = keyPrefix + "device"
-	portKey           = keyPrefix + "port"
-	pxepackageURLKey  = keyPrefix + "pxepackageURL"
+	keyPrefix          = "tftpd."
+	configFileDefault  = ""
+	serverHostPortKey  = keyPrefix + "serverHostPort"
+	configFileKey      = keyPrefix + "configFile"
+	deviceKey          = keyPrefix + "device"
+	portKey            = keyPrefix + "port"
+	biosFilenameURLKey = keyPrefix + "biosFilenameURL"
 )
 
 var (

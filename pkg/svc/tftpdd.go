@@ -6,7 +6,9 @@ package svc
 import (
 	"context"
 	"fmt"
+	"io"
 	"net"
+	"net/http"
 	"os"
 	"path/filepath"
 	"strings"
@@ -69,6 +71,25 @@ func (t *TFTPDManager) Create(ctx context.Context, req *TFTPDD.TFTPD) (*TFTPDD.T
 	dir := filepath.Join(t.baseDir, id)
 	if err := os.MkdirAll(dir, 0777); err != nil {
 		return nil, err
+	}
+
+	url := req.GetBIOSFilenameURL()
+	if url != "" {
+		res, err := http.Get(req.GetBIOSFilenameURL())
+		if err != nil {
+			return nil, err
+		}
+		defer res.Body.Close()
+
+		file, err := os.Create(filepath.Join(dir, "undionly.kpxe"))
+		if err != nil {
+			return nil, err
+		}
+		defer file.Close()
+
+		if _, err := io.Copy(file, res.Body); err != nil {
+			return nil, err
+		}
 	}
 
 	worker := &managedWorker{worker: workers.NewTFTPD(bindAddress, dir), status: "up"}

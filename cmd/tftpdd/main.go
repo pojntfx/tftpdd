@@ -4,6 +4,7 @@ import (
 	"net"
 	"os"
 	"os/signal"
+	"path/filepath"
 	"strings"
 	"syscall"
 
@@ -53,7 +54,7 @@ https://pojntfx.github.io/tftpdd/`,
 		server := grpc.NewServer()
 		reflection.Register(server)
 
-		tftpdService := svc.NewTFTPDManager(os.TempDir())
+		tftpdService := svc.NewTFTPDManager(filepath.Join(os.TempDir(), "tftpdd"))
 
 		TFTPDD.RegisterTFTPDDManagerServer(server, tftpdService)
 
