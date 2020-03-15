@@ -31,7 +31,7 @@ type TFTPDManager struct {
 func NewTFTPDManager(baseDir string) *TFTPDManager {
 	return &TFTPDManager{
 		baseDir: baseDir,
-		workers: make(map[string]*workers.TFTPD),
+		workers: make(map[string]*workers.TFTPD), // TODO: Add status
 	}
 }
 
@@ -104,20 +104,14 @@ func (t *TFTPDManager) List(ctx context.Context, req *TFTPDD.TFTPDManagerListArg
 func (t *TFTPDManager) Get(ctx context.Context, req *TFTPDD.TFTPDId) (*TFTPDD.TFTPDManaged, error) {
 	log.Info("Getting TFTP server")
 
-	var res *TFTPDD.TFTPDManaged
-	for id, worker := range t.workers {
-		if id == req.GetId() {
-			res = &TFTPDD.TFTPDManaged{
-				Id:            id,
-				ListenAddress: worker.GetBindAddress(),
-			}
+	id := req.GetId()
+	worker := t.workers[id]
 
-			break
-		}
-	}
-
-	if res != nil {
-		return res, nil
+	if worker != nil {
+		return &TFTPDD.TFTPDManaged{
+			Id:            id,
+			ListenAddress: worker.GetBindAddress(),
+		}, nil
 	}
 
 	msg := "TFTP server not found"
@@ -129,16 +123,17 @@ func (t *TFTPDManager) Get(ctx context.Context, req *TFTPDD.TFTPDId) (*TFTPDD.TF
 
 // Delete deletes one of the managed TFTP servers.
 func (t *TFTPDManager) Delete(ctx context.Context, req *TFTPDD.TFTPDId) (*TFTPDD.TFTPDId, error) {
-	log.Info("Stopping TFTP server")
+	log.Info("Deleting TFTP server")
 
-	for id, worker := range t.workers {
-		if id == req.GetId() {
-			worker.Stop()
+	id := req.GetId()
+	worker := t.workers[id]
 
-			return &TFTPDD.TFTPDId{
-				Id: id,
-			}, nil
-		}
+	if worker != nil {
+		delete(t.workers, id)
+
+		return &TFTPDD.TFTPDId{
+			Id: id,
+		}, nil
 	}
 
 	msg := "TFTP server not found"
