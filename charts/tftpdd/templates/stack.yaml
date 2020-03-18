@@ -42,7 +42,7 @@ spec:
               cpu: {{ .Values.resources.cpu }}
           {{ end }}
           ports:
-            - containerPort: 1340
+            - containerPort: 1040
             {{ if and .Values.meta.dev .Values.meta.debug }}
             - containerPort: {{ .Values.meta.debugPort }}
             {{end}}
@@ -59,8 +59,8 @@ spec:
   type: NodePort
   ports:
     - name: grpc
-      port: 1340
-      targetPort: 1340
+      port: 1040
+      targetPort: 1040
       nodePort: {{ .Values.ingress.nodePort }}
     - name: debug
       port: {{ .Values.meta.debugNodePort }}
@@ -96,8 +96,8 @@ spec:
     app: tftpdd-{{ .Release.Name }}
   ports:
     - name: grpc
-      port: 1340
-      targetPort: 1340
+      port: 1040
+      targetPort: 1040
 
 ---
 apiVersion: networking.k8s.io/v1beta1
