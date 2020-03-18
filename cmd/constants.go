@@ -1,7 +1,7 @@
 package cmd
 
 const (
-	TFTPDDHostPortDefault = "localhost:1340"                  // TFTPDDHostPortDefault is the default Host:port of `tftpdd`.
+	TFTPDDHostPortDefault = "localhost:1040"                  // TFTPDDHostPortDefault is the default Host:port of `tftpdd`.
 	HostPortDocs          = "Host:port of the server to use." // HostPortDocs is the documentation for the host:port flag.
 	ConfigurationFileDocs = "Configuration file to use."      // ConfigurationFileDocs is the documentation for the configuration file flag.)
 )

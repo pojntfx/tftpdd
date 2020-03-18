@@ -14,6 +14,6 @@ resources:
   maxReplicas: 10
 
 ingress:
-  nodePort: 31340
-  domain: tftpdd.felix.pojtinger.com
+  nodePort: 31040
+  domain: tftpdd.example.com
   path: /
