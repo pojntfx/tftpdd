@@ -21,7 +21,7 @@ var (
 )
 
 func getListenAddr() (string, error) {
-	listener, err := net.Listen("tcp", "localhost:0")
+	listener, err := net.Listen("tcp", ":0")
 	if err != nil {
 		return "", err
 	}

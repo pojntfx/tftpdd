@@ -18,7 +18,7 @@ targets:
           unitTests: |
             if [ "$DIBS_DEBUG" = "true" ]; then
               pkill -9 dlv || true
-              dlv test --headless --listen=localhost:31441 --api-version=2 ./pkg/workers/... || true
+              dlv test --headless --listen=:31441 --api-version=2 ./pkg/workers/... || true
             else
               go test -v ./...
             fi
@@ -30,7 +30,7 @@ targets:
               pkill -9 dlv || true
               pkill -9 tftpdd || true
               .bin/binaries/tftpdd/tftpdd-linux-amd64 &
-              dlv attach $! --headless --listen=localhost:31441 --api-version=2 --accept-multiclient || true
+              dlv attach $! --headless --listen=:31441 --api-version=2 --accept-multiclient || true
             else
               .bin/binaries/tftpdd/tftpdd-linux-amd64
             fi
@@ -64,7 +64,7 @@ targets:
           unitTests: |
             if [ "$DIBS_DEBUG" = "true" ]; then
               pkill -9 dlv || true
-              dlv test --headless --listen=localhost:31441 --api-version=2 ./pkg/workers/... || true
+              dlv test --headless --listen=:31441 --api-version=2 ./pkg/workers/... || true
             else
               go test -v ./...
             fi
@@ -110,7 +110,7 @@ targets:
           unitTests: |
             if [ "$DIBS_DEBUG" = "true" ]; then
               pkill -9 dlv || true
-              dlv test --headless --listen=localhost:31441 --api-version=2 ./pkg/workers/... || true
+              dlv test --headless --listen=:31441 --api-version=2 ./pkg/workers/... || true
             else
               go test -v ./...
             fi
