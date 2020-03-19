@@ -1,2 +1,2 @@
 tftpdd:
-  listenHostPort: localhost:1040
+  listenHostPort: :1040

@@ -48,7 +48,7 @@ Usage:
 Flags:
   -h, --help                           help for tftpdd
   -f, --tftpdd.configFile string       Configuration file to use.
-  -l, --tftpdd.listenHostPort string   TCP listen host:port. (default "localhost:1040")
+  -l, --tftpdd.listenHostPort string   TCP listen host:port. (default ":1040")
 ```
 
 ### Client CLIs
